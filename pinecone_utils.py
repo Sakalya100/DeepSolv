@@ -17,11 +17,9 @@ from db_utils import get_past_conversation
 dotenv.load_dotenv(override=True)
 
 pinecone_api_key = os.getenv("PINECONE_API_KEY")
-api_key = os.getenv("OPENAI_API_KEY_2")
+openai_api_key = os.getenv("OPENAI_API_KEY")
 model_name = "sentence-transformers/all-MiniLM-L6-v2"
 embeddings = HuggingFaceEmbeddings(model_name=model_name)
-hf_api_key = os.getenv("HUGGINGFACEHUB_API_TOKEN")
-google_api_key = os.getenv("GOOGLE_API_KEY")
 
 def initialize_pinecone(index_name):
     print("Initializing Pinecone Vector Store")
@@ -32,7 +30,7 @@ def create_retriever(vectorstore):
     return vectorstore.as_retriever(search_kwargs={"k": 5})
 
 def create_llm():
-    return ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0.7)
+    return ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0.7, openai_api_key=openai_api_key)
 
 
 def create_rag_chain(retriever, llm, prompt):
